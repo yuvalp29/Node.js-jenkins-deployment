@@ -2,12 +2,13 @@ node {
     def commit_id
     
     stage('Preparation') {
-        sh "echo Checkout!"
+        sh "echo Excecuting preparation and checks."
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id"
         commit_id = readFile('.git/commit-id').trim()
     }
     stage('Build') {
+        sh "echo Start building dockers."
         //sh "docker-composer build"
         //sh "docker-compose up -d"
         //waitUntilServicesReady
