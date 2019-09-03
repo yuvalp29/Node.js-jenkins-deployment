@@ -4,7 +4,7 @@ node {
         sh "echo test completed"
     }
     stage ('Checkout') {
-        sh "echo "Checkout!""
+        sh "echo Checkout!"
     }
     stage ('Cleanup') {
     sh "echo cleanup starting..."
