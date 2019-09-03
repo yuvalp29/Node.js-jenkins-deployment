@@ -1,4 +1,4 @@
-node(label: 'builder') {
+node {
     def commit_id
     
     stage('Preparation') {
