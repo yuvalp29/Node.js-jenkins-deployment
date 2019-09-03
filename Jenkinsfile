@@ -8,9 +8,9 @@ node {
         commit_id = readFile('.git/commit-id').trim()
     }
     stage('Build') {
-       //sh "docker-composer build"
-       //sh "docker-compose up -d"
-        waitUntilServicesReady
+        //sh "docker-composer build"
+        //sh "docker-compose up -d"
+        //waitUntilServicesReady
     }
     stage('Test') {
         sh "echo test started"
