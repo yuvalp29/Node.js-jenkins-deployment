@@ -24,9 +24,9 @@ node {
     //sh "docker image prune -af"
     sh "echo cleanup finished."
         
-    mail body: 'project build successful',
-         from: 'ypodoksik29@gmail.com',
-         subject: 'project build successful',
-         to: 'ypodoksik29@gmail.com'
+    //mail body: 'project build successful',
+         //from: 'ypodoksik29@gmail.com',
+         //subject: 'project build successful',
+         //to: 'ypodoksik29@gmail.com'
     }
 }
