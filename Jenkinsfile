@@ -1,10 +1,11 @@
 node {
-    stage ('Checkout') {
+    def commit_id
+    
+    stage('Preparation') {
         sh "echo Checkout!"
         checkout scm
-    }
-    stage('Prepare') {
-       bitbucketStatusNotify buildState: "INPROGRESS"
+        sh "git rev-parse --short HEAD > .git/commit-id"
+        commit_id = readFile('.git/commit-id').trim()
     }
     stage('Build') {
        //sh "docker-composer build"
