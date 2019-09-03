@@ -1,5 +1,4 @@
-pipeline {
-    agent any
+node {
     stage ('Test') {
         sh "echo test started"
         sh "echo test completed"
