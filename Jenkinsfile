@@ -15,8 +15,8 @@ pipeline {
                 //sh "docker-composer build"
                 //sh "docker-compose up -d"
                 //waitUntilServicesReady
-                sh 'make' 
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true 
+                //sh 'make' 
+                //archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true 
                 sh "echo Build stage completed."
             }
         }
@@ -29,7 +29,7 @@ pipeline {
                 * using `true` to allow the Pipeline to continue nonetheless
                 */
                 sh 'make check || true' 
-                junit '**/target/*.xml' 
+                //junit '**/target/*.xml' 
                 sh "echo Test stage completed."
             }
         }
@@ -41,7 +41,7 @@ pipeline {
             }
             steps {
                 sh "echo Deploy stage is runing."
-                sh 'make publish'
+                //sh 'make publish'
                 sh "echo Deploy stage completed."    
             }
         }
