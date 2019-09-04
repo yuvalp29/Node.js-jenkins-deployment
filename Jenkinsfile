@@ -1,6 +1,7 @@
 pipeline {
     agent any
-
+    def commit_id
+    
     stages {
         stage('Prepare') {
             steps {
