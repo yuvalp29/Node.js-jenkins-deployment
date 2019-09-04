@@ -1,14 +1,11 @@
 pipeline {
     agent any
-    def commit_id
     
     stages {
         stage('Prepare') {
             steps {
                 sh "echo Preparation stage is runing."
                 checkout scm
-                sh "git rev-parse --short HEAD > .git/commit-id"
-                commit_id = readFile('.git/commit-id').trim()
                 sh "echo Preparation stage completed."
             }
         }
