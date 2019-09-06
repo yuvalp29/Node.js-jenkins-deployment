@@ -3,8 +3,6 @@ node {
     
     stage('Prepare') {
         sh "echo Preparation stage is runing."
-        sh "hostname"
-        sh "uptime"
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id"
         commit_id = readFile('.git/commit-id').trim()
@@ -25,7 +23,7 @@ node {
     }
     stage('Deploy') {
         sh "echo Deploy stage is runing."
-        sh "echo Deploy stage completed."    
+        sh "echo Application lunched on production. Deploy stage completed."    
     }
     stage ('Cleanup') {
         sh "echo Cleanup stage is runing."
