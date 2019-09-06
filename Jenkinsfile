@@ -1,44 +1,39 @@
-pipeline {
-    agent {
-        docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000 -p 5000:5000'
-        }
+node {
+    def commit_id
+    
+    stage('Prepare') {
+        sh "echo Preparation stage is runing."
+        checkout scm
+        sh "git rev-parse --short HEAD > .git/commit-id"
+        commit_id = readFile('.git/commit-id').trim()
+        sh "echo Preparation stage completed."
     }
-    environment {
-        CI = 'true'
+    stage('Build') {
+        sh "echo Build stage is runing."
+        //sh "docker-composer build"
+        //sh "docker-compose up -d"
+        //waitUntilServicesReady
+        sh "echo Build stage completed."
     }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'npm install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh './test.sh'
-
-            }
-        }
-        stage('Deliver for development') {
-            when {
-                branch 'development' 
-            }
-            steps {
-                sh './deliver-for-development.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './kill.sh'
-            }
-        }
-        stage('Deploy for production') {
-            when {
-                branch 'production'  
-            }
-            steps {
-                sh './deploy-for-production.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './kill.sh'
-            }
-        }
+    stage('Test') {
+        sh "echo Test stage is runing."
+        //sh "docker-compose exec -T php-fpm composer --no-ansi --no-interaction tests-ci"
+        //sh "docker-compose exec -T php-fpm composer --no-ansi --no-interaction behat-ci"
+        sh "echo Test stage completed."
+    }
+    stage('Deploy') {
+        sh "echo Deploy stage is runing."
+        sh "echo Application lunched on production. Deploy stage completed."    
+    }
+    stage ('Cleanup') {
+        sh "echo Cleanup stage is runing."
+        //sh "docker image prune -af"
+       
+        //mail body: 'project build successful',
+             //from: 'ypodoksik29@gmail.com',
+             //subject: 'project build successful',
+             //to: 'ypodoksik29@gmail.com'
+    
+        sh "echo cleanup stage completed."
     }
 }
