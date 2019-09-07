@@ -29,9 +29,9 @@ pipeline {
                 sh "echo Test stage completed."
             }
         }
-        stage('Deliver for development') {
+        stage('Deliver For Development') {
             when {
-                branch 'development' 
+                branch 'Development' 
             }
             steps {
                 //sh './deliver-for-development.sh'
@@ -41,9 +41,9 @@ pipeline {
                 sh "echo Application deliverd to development. Deliver stage completed."   
             }
         }
-        stage('Deploy for production') {
+        stage('Deploy For Production') {
             when {
-                branch 'production'  
+                branch 'Production'  
             }
             steps {
                 //sh './deploy-for-production.sh'
