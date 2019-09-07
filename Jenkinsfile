@@ -7,7 +7,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh "echo Build stage is runing."
-                sh "docker build -t yuvalp29-web-app -f ./Dockerfile .
+                sh "docker build -t yuvalp29-web-app -f ./Dockerfile
                 sh "docker push yuvalp29-web-app"
 			
                 //docker.withRegistry('https://registry.example.com', 'dockerhub') {
