@@ -1,19 +1,17 @@
 pipeline {
 	agent any
     	environment {
-	    CI = 'true'
-	    commit_id = ''		
+	    CI = 'true'	
 	    registry = "yp29/jenkinsmultibranch"
 	    registryCredential = 'dockerhub'
 	    dockerImage = ''
+	    repo_name = 'yp29/web-app'
 	}
 	stages {
 		stage('Prepare') {
             		steps {
                 		sh "echo Preparation stage is runing."
                 		checkout scm  
-				sh "git rev-parse --short HEAD > .git/commit-id"
-        			commit_id = readFile('.git/commit-id').trim()
                 		sh "echo Preparation stage completed."
             		}
         	}
@@ -21,7 +19,7 @@ pipeline {
            		steps {
 				sh "echo Build Image stage is runing."
 				script {
-					dockerImage = docker.build registry + ":$BUILD_NUMBER"
+					dockerImage = docker.build registry + ":$repo_name"
 				}	
 				sh "echo Build Image stage completed."
 			}
