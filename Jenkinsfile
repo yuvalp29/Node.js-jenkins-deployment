@@ -2,16 +2,13 @@ pipeline {
     agent any
     environment {
         CI = 'true'
-		rep_name = "yuvalp29/Jenkins"
-        docker_name = "yuvalp29-web-app"
-		appImage
     }
 	stages {
         stage('Build') {
             steps {
                 sh "echo Build stage is runing."
-                sh "docker build -t ${docker_name} -f ./Dockerfile .
-                sh "docker push ${docker_name}"
+                sh "docker build -t yuvalp29-web-app -f ./Dockerfile .
+                sh "docker push yuvalp29-web-app"
 			
                 //docker.withRegistry('https://registry.example.com', 'dockerhub') {
 					/* Push the container to the custom Registry */
