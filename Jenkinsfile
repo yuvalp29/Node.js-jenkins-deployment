@@ -1,30 +1,42 @@
 pipeline {
-    agent any
+	agent any
     environment {
-        CI = 'true'
-	registry = "yp29/jenkinsmultibranch"
+       	CI = 'true'
+		registry = "yp29/jenkinsmultibranch"
     	registryCredential = 'dockerhub'
-    }
+	}
 	stages {
-        stage('Build') {
+		stage('Prepare') {
             steps {
-                sh "echo Build stage is runing."
-		script {
-          		docker.build registry + ":$BUILD_NUMBER"
-		}
-                sh "echo Build stage completed."
+                sh "echo Preparation stage is runing."
+                checkout scm    
+                sh "echo Preparation stage completed."
             }
         }
+       	stage('Build Image') {
+           	steps {
+				sh "echo Build Image stage is runing."
+				script {
+					docker.build registry + ":$BUILD_NUMBER"
+				}
+				sh "echo Build Image stage completed."
+			}
+		}
+		stage('Push Image') {
+			steps{
+				sh "echo Push Image stage is runing."
+				script {
+					docker.withRegistry( '', registryCredential ) {
+						dockerImage.push()
+					}
+				}
+				sh "echo Push Image stage completed."
+			}
+		}		
         stage('Cleanup') {
             steps {
                 sh "echo Cleanup stage is runing."
                 sh "docker image prune -af"
-       
-                //mail body: 'project build successful',
-                //from: 'ypodoksik29@gmail.com',
-                //subject: 'project build successful',
-                //to: 'ypodoksik29@gmail.com'
-    
                 sh "echo cleanup stage completed."
             }
         }
