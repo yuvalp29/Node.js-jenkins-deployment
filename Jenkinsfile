@@ -2,55 +2,23 @@ pipeline {
     agent any
     environment {
         CI = 'true'
+		rep_name = "yuvalp29/Jenkins"
+        docker_name = "yuvalp29-web-app"
+		appImage
     }
-    stages {
-        stage('Prepare') {
-            steps {
-                sh "echo Preparation stage is runing."
-                checkout scm    
-                sh "echo Preparation stage completed."
-            }
-        }
+	stages {
         stage('Build') {
             steps {
                 sh "echo Build stage is runing."
-                //sh "docker-composer build"
-                //sh "docker-compose up -d"
-                //waitUntilServicesReady
+                sh "docker build -t ${docker_name} -f ./Dockerfile .
+                sh "docker push ${docker_name}"
+			
+                //docker.withRegistry('https://registry.example.com', 'dockerhub') {
+					/* Push the container to the custom Registry */
+				//	appImage = docker.build("my-image:${env.BUILD_ID}").push()
+			//	}
+
                 sh "echo Build stage completed."
-            }
-        }
-        stage('Test') {
-            steps {
-                sh "echo Test stage is runing."
-                //sh './test.sh'
-                //sh "docker-compose exec -T php-fpm composer --no-ansi --no-interaction tests-ci"
-                //sh "docker-compose exec -T php-fpm composer --no-ansi --no-interaction behat-ci"
-                sh "echo Test stage completed."
-            }
-        }
-        stage('Deliver For Development') {
-            when {
-                branch 'Development' 
-            }
-            steps {
-                //sh './deliver-for-development.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh "echo Deliver for development stage is runing."
-                //sh './kill.sh'
-                sh "echo Application deliverd to development. Deliver stage completed."   
-            }
-        }
-        stage('Deploy For Production') {
-            when {
-                branch 'Production'  
-            }
-            steps {
-                //sh './deploy-for-production.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh "echo Deploy for production stage is runing."
-                //sh './kill.sh'
-                sh "echo Application lunched on production. Deploy stage completed."   
             }
         }
         stage('Cleanup') {
