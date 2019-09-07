@@ -1,9 +1,10 @@
 pipeline {
 	agent any
     	environment {
-       		CI = 'true'
-		registry = "yp29/jenkinsmultibranch"
-    		registryCredential = 'dockerhub'
+	    CI = 'true'
+	    registry = "yp29/jenkinsmultibranch"
+	    registryCredential = 'dockerhub'
+	    dockerImage = ''
 	}
 	stages {
 		stage('Prepare') {
@@ -17,7 +18,7 @@ pipeline {
            		steps {
 				sh "echo Build Image stage is runing."
 				script {
-					docker.build registry + ":$BUILD_NUMBER"
+					dockerImage = docker.build registry + ":$BUILD_NUMBER"
 				}	
 				sh "echo Build Image stage completed."
 			}
