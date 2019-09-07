@@ -10,23 +10,23 @@ pipeline {
 	stages {
 		stage('Prepare') {
             		steps {
-                		sh "echo Preparation stage is runing."
+                		sh "echo Preparation stage is running."
                 		checkout scm  
                 		sh "echo Preparation stage completed."
             		}
         	}
        		stage('Build Image') {
            		steps {
-				sh "echo Build Image stage is runing."
+				sh "echo Build Image stage is running."
 				script {
-					dockerImage = docker.build registry + ":$repo_name"
+					dockerImage = docker.build registry + ":$BUILD_NUMBER"
 				}	
 				sh "echo Build Image stage completed."
 			}
 		}	
 		stage('Publish Image') {
 			steps{
-				sh "echo Publish Image stage is runing."
+				sh "echo Publish Image stage is running."
 				script {
 					docker.withRegistry( '', registryCredential ) {
 						dockerImage.push()
@@ -37,7 +37,7 @@ pipeline {
 		}		
         	stage('Cleanup') {
             		steps {
-                		sh "echo Cleanup stage is runing."
+                		sh "echo Cleanup stage is running."
                 		sh "docker image prune -af"
                 		sh "echo cleanup stage completed."
         		    }
