@@ -2,6 +2,7 @@ pipeline {
 	agent any
     	environment {
 	    CI = 'true'
+	    commit_id = ''		
 	    registry = "yp29/jenkinsmultibranch"
 	    registryCredential = 'dockerhub'
 	    dockerImage = ''
@@ -10,7 +11,9 @@ pipeline {
 		stage('Prepare') {
             		steps {
                 		sh "echo Preparation stage is runing."
-                		checkout scm    
+                		checkout scm  
+				sh "git rev-parse --short HEAD > .git/commit-id"
+        			commit_id = readFile('.git/commit-id').trim()
                 		sh "echo Preparation stage completed."
             		}
         	}
@@ -23,15 +26,15 @@ pipeline {
 				sh "echo Build Image stage completed."
 			}
 		}	
-		stage('Push Image') {
+		stage('Publish Image') {
 			steps{
-				sh "echo Push Image stage is runing."
+				sh "echo Publish Image stage is runing."
 				script {
 					docker.withRegistry( '', registryCredential ) {
 						dockerImage.push()
 					}
 				}
-				sh "echo Push Image stage completed."
+				sh "echo Publish Image stage completed."
 			}
 		}		
         	stage('Cleanup') {
