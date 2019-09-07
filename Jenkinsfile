@@ -56,7 +56,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 sh "echo Cleanup stage is runing."
-                //sh "docker image prune -af"
+                sh "docker image prune -af"
        
                 //mail body: 'project build successful',
                 //from: 'ypodoksik29@gmail.com',
