@@ -7,15 +7,12 @@ pipeline {
     }
     environment {
         CI = 'true'
-        commit_id = readFile('.git/commit-id')
     }
     stages {
         stage('Prepare') {
             steps {
                 sh "echo Preparation stage is runing."
                 checkout scm    
-                sh "git rev-parse --short HEAD > .git/commit-id"
-                commit_id.trim()
                 sh "echo Preparation stage completed."
             }
         }
