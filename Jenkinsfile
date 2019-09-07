@@ -63,10 +63,10 @@ pipeline {
                 sh "echo Cleanup stage is runing."
                 //sh "docker image prune -af"
        
-                mail body: 'project build successful',
-                from: 'ypodoksik29@gmail.com',
-                subject: 'project build successful',
-                to: 'ypodoksik29@gmail.com'
+                //mail body: 'project build successful',
+                //from: 'ypodoksik29@gmail.com',
+                //subject: 'project build successful',
+                //to: 'ypodoksik29@gmail.com'
     
                 sh "echo cleanup stage completed."
             }
