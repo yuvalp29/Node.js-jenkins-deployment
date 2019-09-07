@@ -2,19 +2,16 @@ pipeline {
     agent any
     environment {
         CI = 'true'
+	registry = "yp29/jenkinsmultibranch"
+    	registryCredential = 'dockerhub'
     }
 	stages {
         stage('Build') {
             steps {
                 sh "echo Build stage is runing."
-                sh "docker build -t yuvalp29-web-app -f ./Dockerfile
-                sh "docker push yuvalp29-web-app"
-			
-                //docker.withRegistry('https://registry.example.com', 'dockerhub') {
-					/* Push the container to the custom Registry */
-				//	appImage = docker.build("my-image:${env.BUILD_ID}").push()
-			//	}
-
+		script {
+          		docker.build registry + ":$BUILD_NUMBER"
+		}
                 sh "echo Build stage completed."
             }
         }
