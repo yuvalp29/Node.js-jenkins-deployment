@@ -19,7 +19,7 @@ pipeline {
            		steps {
 				sh "echo Build Image stage is running."
 				script {
-					dockerImage = docker.build("${rep_name}:${commit_id}", '.')
+					dockerImage = docker.build("${rep_name}:$BUILD_NUMBER", '.')
 				}	
 				sh "echo Build Image stage completed."
 			}
