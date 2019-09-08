@@ -13,19 +13,18 @@ node {
 	}
 	stage('Build / Publish') {
 		sh "echo Build/Publish stage is running."
-		def dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
+		def customImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
 		docker.withRegistry( '', registryCredential ) {
-			dockerImage.push()
+			customImage.push()
+			customImage.push('latest')
 		}
 		sh "echo Build/Publish stage completed."
 	}
 	stage('Test') {
-		sh "echo Test stage is runing."
-	    	dockerImage.inside {
-        		sh 'make test'
-    		}
-		//sh './test.sh'
-		//sh "docker-compose exec -T php-fpm composer --no-ansi --no-interaction tests-ci"
+		sh "echo Test stage is running."
+	    	//customImage.inside {
+        	//	sh 'make test'
+    		//}
 		sh "echo Test stage completed."
 	}
 	stage('Cleanup') {
