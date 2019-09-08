@@ -29,7 +29,7 @@ node {
 	stage('Deliver For Development') {
 		if(env.BRANCH_NAME == 'Development'){
 			//sh './deliver-for-development.sh'
-			input message: 'Finished before delivering for development? (Click "Proceed" to continue)'
+			input message: 'Finished using the web site? (Click "Proceed" to continue)'
 			sh "echo Deliver for development stage is runing."
 			//sh './kill.sh'
 			sh "echo Application deliverd to development. Deliver stage completed."   
@@ -38,7 +38,7 @@ node {
         stage('Deploy For Production') {
 		if(env.BRANCH_NAME == 'Production'){ 
 			//sh './deploy-for-production.sh'
-			input message: 'Finished before deoplying for production? (Click "Proceed" to continue)'
+			input message: 'Finished using the web site? (Click "Proceed" to continue)'
 			sh "echo Deploy for production stage is runing."
 			//sh './kill.sh'
 			sh "echo Application lunched on production. Deploy stage completed."   
