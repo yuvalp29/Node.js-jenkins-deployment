@@ -5,7 +5,7 @@ pipeline {
 	    registry = "yp29/jenkinsmultibranch"
 	    registryCredential = 'dockerhub'
 	    dockerImage = ''
-	    rep_name = 'yp29/web-app'
+	    rep_name = 'yp29-web-app'
 	}
 	stages {
 		stage('Prepare') {
