@@ -26,26 +26,25 @@ node {
     		//}
 		sh "echo Test stage completed."
 	}
-	stage('Deliver for Development') {
+	stage('Deploy to Development') {
 		if(env.BRANCH_NAME == 'Development'){
-			//sh './deliver-for-development.sh'
-			input message: 'Finished before delivering for development? (Click "Proceed" to continue)'
+			input message: 'Finished before deploying to development? (Click "Proceed" to continue)'
 			sh "echo Deliver for development stage is runing."
-			//sh './kill.sh'
-			sh "echo Application deliverd to development. Deliver stage completed."   
+			//sh './Deploy_to_Development.sh'
+			sh "echo Application lunched on development. Deploy to Development stage completed."   
 		}
 	}
         stage('Deploy to Production') {
 		if(env.BRANCH_NAME == 'Production'){ 
-			//sh './deploy-for-production.sh'
 			input message: 'Finished before deploying to production? (Click "Proceed" to continue)'
 			sh "echo Deploy for production stage is runing."
-			//sh './kill.sh'
-			sh "echo Application lunched on production. Deploy stage completed."   
+			//sh './Deploy_to_Production.sh'
+			sh "echo Application lunched on production. Deploy to Production stage completed."   
 		}
 	}
 	stage('Cleanup') {
 		sh "echo Cleanup stage is running."
+		sh "docker rmi $registry:$rep_name-$BUILD_NUMBER"
 		sh "docker image prune -af"
 		sh "echo cleanup stage completed."
 	}
