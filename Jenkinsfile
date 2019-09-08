@@ -15,26 +15,16 @@ pipeline {
                 		sh "echo Preparation stage completed."
             		}
         	}
-       		stage('Build Image') {
+       		stage('Build & Publish Image') {
            		steps {
-				sh "echo Build Image stage is running."
-				script {
-					dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER" 
-				}	
-				sh "echo Build Image stage completed."
-			}
-		}	
-		stage('Publish Image') {
-			steps{
-				sh "echo Publish Image stage is running."
+				sh "echo Build & Publish Image stage is running."
 				script {
 					docker.withRegistry( '', registryCredential ) {
-						dockerImage.push()
-					}
-				}
-				sh "echo Publish Image stage completed."
+						dockerImage = docker.build(registry + ":$rep_name-$BUILD_NUMBER").push()
+				}	
+				sh "echo Build & Publish Image stage completed."
 			}
-		}		
+		}			
         	stage('Cleanup') {
             		steps {
                 		sh "echo Cleanup stage is running."
