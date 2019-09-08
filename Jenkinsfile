@@ -19,13 +19,19 @@ pipeline {
            		steps {
 				sh "echo Build & Publish Image stage is running."
 				script {
-					docker.withRegistry( '', registryCredential ) {
-						dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
-						dockerImage.push()
+					dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
 				}	
 				sh "echo Build & Publish Image stage completed."
 			}
-		}			
+		}		
+		stage('Bla bla Image') {
+           		steps {
+				script {
+					docker.withRegistry( '', registryCredential ) {
+						dockerImage.push()
+				}	
+			}
+		}	
         	stage('Cleanup') {
             		steps {
                 		sh "echo Cleanup stage is running."
