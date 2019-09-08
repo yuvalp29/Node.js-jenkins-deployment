@@ -3,7 +3,6 @@ node {
 	def registry = "yp29/jenkinsmultibranch"
 	def registryCredential = 'dockerhub'
 	def rep_name = 'yp29-web-app'
-	def dockerImage = ''
 
 	stage('Prepare') {
 		sh "echo Preparation stage is running."
@@ -14,7 +13,7 @@ node {
 	}
 	stage('Build / Publish') {
 		sh "echo Build/Publish stage is running."
-		dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
+		def dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
 		docker.withRegistry( '', registryCredential ) {
 			dockerImage.push()
 		}
@@ -22,6 +21,9 @@ node {
 	}
 	stage('Test') {
 		sh "echo Test stage is runing."
+	    	dockerImage.inside {
+        		sh 'make test'
+    		}
 		//sh './test.sh'
 		//sh "docker-compose exec -T php-fpm composer --no-ansi --no-interaction tests-ci"
 		sh "echo Test stage completed."
