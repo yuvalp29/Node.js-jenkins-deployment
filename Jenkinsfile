@@ -19,9 +19,7 @@ pipeline {
            		steps {
 				sh "echo Build Image stage is running."
 				script {
-					dockerImage = docker.build registry + ":$BUILD_NUMBER"
-					docker tag dockerImage "$rep_name:$BUILD_NUMBER"
-					docker push "$rep_name:$BUILD_NUMBER"
+					dockerImage = docker.build registry + ":$BUILD_NUMBER" + "hey"
 				}	
 				sh "echo Build Image stage completed."
 			}
