@@ -5,7 +5,7 @@ pipeline {
 	    registry = "yp29/jenkinsmultibranch"
 	    registryCredential = 'dockerhub'
 	    dockerImage = ''
-	    repo_name = 'yp29/web-app'
+	    rep_name = 'yp29/web-app'
 	}
 	stages {
 		stage('Prepare') {
@@ -19,7 +19,7 @@ pipeline {
            		steps {
 				sh "echo Build Image stage is running."
 				script {
-					dockerImage = docker.build registry + ":$BUILD_NUMBER"
+					dockerImage = docker.build("${rep_name}:${commit_id}", '.')
 				}	
 				sh "echo Build Image stage completed."
 			}
