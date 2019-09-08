@@ -26,19 +26,19 @@ node {
     		//}
 		sh "echo Test stage completed."
 	}
-	stage('Deliver For Development') {
+	stage('Deliver for Development') {
 		if(env.BRANCH_NAME == 'Development'){
 			//sh './deliver-for-development.sh'
-			input message: 'Finished using the web site? (Click "Proceed" to continue)'
+			input message: 'Finished before delivering for development? (Click "Proceed" to continue)'
 			sh "echo Deliver for development stage is runing."
 			//sh './kill.sh'
 			sh "echo Application deliverd to development. Deliver stage completed."   
 		}
 	}
-        stage('Deploy For Production') {
+        stage('Deploy to Production') {
 		if(env.BRANCH_NAME == 'Production'){ 
 			//sh './deploy-for-production.sh'
-			input message: 'Finished using the web site? (Click "Proceed" to continue)'
+			input message: 'Finished before deploying to production? (Click "Proceed" to continue)'
 			sh "echo Deploy for production stage is runing."
 			//sh './kill.sh'
 			sh "echo Application lunched on production. Deploy stage completed."   
