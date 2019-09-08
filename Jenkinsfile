@@ -20,7 +20,8 @@ pipeline {
 				sh "echo Build & Publish Image stage is running."
 				script {
 					docker.withRegistry( '', registryCredential ) {
-						dockerImage = docker.build(registry + ":$rep_name-$BUILD_NUMBER").push()
+						dockerImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
+						dockerImage.push()
 				}	
 				sh "echo Build & Publish Image stage completed."
 			}
