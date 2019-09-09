@@ -1,9 +1,11 @@
 node {
 	def commit_id
 	def registry = "yp29/jenkinsmultibranch"
-	def registryCredential = 'dockerhub'
-	def rep_name = 'yp29-web-app'
-
+	def registryCredential = "dockerhub"
+	def rep_name = "yp29-web-app"
+	def docker_dev_name = "docker-development-app"
+	def docker_prod_name = "docker-production-app"
+	
 	stage('Prepare') {
 		sh "echo Preparation stage is running."
 		checkout scm  
@@ -21,26 +23,11 @@ node {
 	}
 	stage('Test') {
 		sh "echo Test stage is running."
+		input message: "Finished checking the Image localy and remotly? (Click "Proceed" to continue)"
 	    	//customImage.inside {
         	//	sh 'make test'
     		//}
 		sh "echo Test stage completed."
-	}
-	stage('Deploy to Development') {
-		if(env.BRANCH_NAME == 'Development'){
-			input message: 'Finished before deploying to development? (Click "Proceed" to continue)'
-			sh "echo Deliver for development stage is runing."
-			//sh './Deploy_to_Development.sh'
-			sh "echo Application lunched on development. Deploy to Development stage completed."   
-		}
-	}
-        stage('Deploy to Production') {
-		if(env.BRANCH_NAME == 'Production'){ 
-			input message: 'Finished before deploying to production? (Click "Proceed" to continue)'
-			sh "echo Deploy for production stage is runing."
-			//sh './Deploy_to_Production.sh'
-			sh "echo Application lunched on production. Deploy to Production stage completed."   
-		}
 	}
 	stage('Cleanup') {
 		sh "echo Cleanup stage is running."
