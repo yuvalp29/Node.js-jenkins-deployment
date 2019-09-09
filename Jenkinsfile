@@ -15,7 +15,7 @@ node {
 	}
 	stage('Build / Publish') {
 		sh "echo Build/Publish stage is running."
-		def customImage = docker.build registry + ":$rep_name-$BUILD_NUMBER"
+		def customImage = docker.build registry + ":$rep_name-$commit-id"
 		docker.withRegistry( '', registryCredential ) {
 			customImage.push()
 		}
@@ -29,9 +29,25 @@ node {
     		//}
 		sh "echo Test stage completed."
 	}
+	stage('Deploy to Development') {
+		if(env.BRANCH_NAME == "Development"){
+			input message: "Finished before deploying to development? (Click "Proceed" to continue)"
+			sh "echo Deliver for development stage is runing."
+			sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name} ${commit_id}"
+			sh "echo Application lunched on development. Deploy to Development stage completed."   
+		}
+	}	
+	stage('Deploy to Production') {
+		if(env.BRANCH_NAME == "Production"){ 
+			input message: "Finished before deploying to production? (Click "Proceed" to continue)"
+			sh "echo Deploy for production stage is runing."
+			sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name} ${commit_id}"
+			sh "echo Application lunched on production. Deploy to Production stage completed."   
+		}
+	}
 	stage('Cleanup') {
 		sh "echo Cleanup stage is running."
-		sh "docker rmi $registry:$rep_name-$BUILD_NUMBER"
+		sh "docker rmi $registry:$rep_name-$commit_id"
 		sh "docker image prune -af"
 		sh "echo cleanup stage completed."
 	}
