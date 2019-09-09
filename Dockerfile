@@ -6,4 +6,5 @@ WORKDIR /app
 ENTRYPOINT ["node"]
 EXPOSE 8081
 EXPOSE 80
+EXPOSE 81
 CMD ["app/main.js"]
