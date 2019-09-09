@@ -33,6 +33,7 @@ node {
 		if(env.BRANCH_NAME == "Development"){
 			input message: 'Finished before deploying to development? (Click "Proceed" to continue)'
 			sh "echo Deliver for development stage is runing."
+			sh "chmod +x ./Deploy_to_Development.sh"
 			sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name} ${commit_id}"
 			sh "echo Application lunched on development. Deploy to Development stage completed."   
 		}
@@ -41,6 +42,7 @@ node {
 		if(env.BRANCH_NAME == "Production"){ 
 			input message: 'Finished before deploying to production? (Click "Proceed" to continue)'
 			sh "echo Deploy for production stage is runing."
+			sh "chmod +x ./Deploy_to_Production.sh"
 			sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name} ${commit_id}"
 			sh "echo Application lunched on production. Deploy to Production stage completed."   
 		}
