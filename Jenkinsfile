@@ -49,7 +49,6 @@ node {
 	}
 	stage('Cleanup') {
 		sh "echo Cleanup stage is running."
-		sh "docker rmi $registry:$rep_name-$commit_id"
 		sh "docker image prune -af"
 		sh "echo cleanup stage completed."
 	}
