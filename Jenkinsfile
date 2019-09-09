@@ -15,7 +15,7 @@ node {
 	}
 	stage('Build / Publish') {
 		sh "echo Build/Publish stage is running."
-		def customImage = docker.build registry + ":$rep_name-$commit-id"
+		def customImage = docker.build registry + ":$rep_name-$commit_id"
 		docker.withRegistry( '', registryCredential ) {
 			customImage.push()
 		}
