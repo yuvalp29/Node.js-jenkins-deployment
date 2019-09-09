@@ -23,7 +23,7 @@ node {
 	}
 	stage('Test') {
 		sh "echo Test stage is running."
-		input message: "Finished checking the Image localy and remotly? (Click "Proceed" to continue)"
+		//input message: "Finished checking the Image localy and remotly? (Click "Proceed" to continue)"
 	    	//customImage.inside {
         	//	sh 'make test'
     		//}
