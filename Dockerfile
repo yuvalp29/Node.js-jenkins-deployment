@@ -4,4 +4,6 @@ RUN apk add --update nodejs nodejs-npm
 COPY . /app
 WORKDIR /app
 ENTRYPOINT ["node"]
+EXPOSE 8081
+EXPOSE 80
 CMD ["app/main.js"]
