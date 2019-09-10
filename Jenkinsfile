@@ -2,7 +2,7 @@ node {
 	def commit_id
 	def registry = "yp29/jenkinsmultibranch"
 	def registryCredential = "dockerhub"
-	def rep_name = "yp29-web-app"
+	def rep_name = "yp29-webapp"
 	def docker_dev_name = "docker-development-app"
 	def docker_prod_name = "docker-production-app"
 	
