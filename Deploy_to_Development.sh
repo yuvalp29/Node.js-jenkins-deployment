@@ -12,4 +12,4 @@
 if [ "$(docker ps -q -f name=$1)" ]; then
     docker stop $1
 fi
-docker run -p 80:8081 -d --rm --name $1 $2:$3-$4
+docker run -p 81:8081 -d --rm --name $1 $2:$3-$4
