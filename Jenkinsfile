@@ -62,7 +62,7 @@ node('slave01-ssh') {
 	}
 	stage('Cleanup') {
 		sh "echo Cleanup stage is running."
-		sh "sudo docker image prune -af"
+		sh "docker image prune -af"
 		sh "echo cleanup stage completed."
 	}
 }
