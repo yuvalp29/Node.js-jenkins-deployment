@@ -1,0 +1,11 @@
+---
+- hosts: servers
+  remote_user: jenkins
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install pip
+      apt: name=python-pip state=present
+  
+    - name: Install docker-py
+      pip: name=docker-py
