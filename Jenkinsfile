@@ -1,4 +1,4 @@
-node('slave02-jnlp') {
+node{
 	def commit_id
 	def registry = "yp29/jenkinsmultibranch"
 	def registryCredential = "dockerhub"
