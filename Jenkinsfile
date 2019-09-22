@@ -40,12 +40,12 @@ node('slave02-jnlp') {
 	}
     stage('Ansible Test'){
         if(env.BRANCH_NAME == "Ansible-Deploy"){
-            sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
+            sh "ansible-playbook -i /home/jenkins/workspace/h_GitHub_Pipeline_Ansible-Deploy/Inventory/hosts.ini /home/jenkins/workspace/h_GitHub_Pipeline_Ansible-Deploy/ymlFiles/TestConnection.yml"
         }
     }
     stage('Ansible Installations'){
         if(env.BRANCH_NAME == "Ansible-Deploy"){
-            sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Prerequisites.yml"
+            sh "ansible-playbook -i /home/jenkins/workspace/h_GitHub_Pipeline_Ansible-Deploy/Inventory/hosts.ini /home/jenkins/workspace/h_GitHub_Pipeline_Ansible-Deploy/ymlFiles/Prerequisites.yml"
         }
     }
 	stage('Deploy to Development') {
