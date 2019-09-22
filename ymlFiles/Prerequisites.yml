@@ -1,6 +1,5 @@
 ---
-- hosts: servers
-  remote_user: jenkins
+- hosts: deploy
   become: yes
   become_method: sudo
   tasks:

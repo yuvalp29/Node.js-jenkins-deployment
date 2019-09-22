@@ -1,4 +1,4 @@
-node('slave01-ssh') {
+node('slave02-jnlp') {
 	def commit_id
 	def registry = "yp29/jenkinsmultibranch"
 	def registryCredential = "dockerhub"
@@ -32,16 +32,22 @@ node('slave01-ssh') {
 			sh "echo Build/Publish to Development stage completed."
 		}
 	}
-	stage('Test') {
+	stage('Echo Test') {
 		if(env.BRANCH_NAME == "Development" || env.BRANCH_NAME == "Production"){
 			sh "echo Test stage is running."
-			//input message: "Finished checking the Image localy and remotly? (Click "Proceed" to continue)"
-				//customImage.inside {
-				//	sh 'make test'
-				//}
 			sh "echo Test stage completed."
 		}
 	}
+    stage('Ansible Test'){
+        if(env.BRANCH_NAME == "Ansible-Deploy"){
+            sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
+        }
+    }
+    stage('Ansible Installations'){
+        if(env.BRANCH_NAME == "Ansible-Deploy"){
+            sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Prerequisites.yml"
+        }
+    }
 	stage('Deploy to Development') {
 		if(env.BRANCH_NAME == "Development"){
 			input message: 'Finished before deploying to development? (Click "Proceed" to continue)'
@@ -49,6 +55,10 @@ node('slave01-ssh') {
 			sh "chmod +x ./Deploy_to_Development.sh"
 			sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
 			sh "echo Application lunched on development. Deploy to Development stage completed."   
+		}
+        else if(env.BRANCH_NAME == "Ansible-Deploy"){
+			sh "echo Build/Publish to Development stage using Ansible is running."
+			sh "echo Build/Publish to Development stage using Ansible completed."
 		}
 	}	
 	stage('Deploy to Production') {
@@ -58,6 +68,10 @@ node('slave01-ssh') {
 			sh "chmod +x ./Deploy_to_Production.sh"
 			sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
 			sh "echo Application lunched on production. Deploy to Production stage completed."   
+		}
+        else if(env.BRANCH_NAME == "Ansible-Deploy"){
+			sh "echo Build/Publish to Production stage using Ansible is running."
+			sh "echo Build/Publish to Production stage using Ansible completed."
 		}
 	}
 	stage('Cleanup') {
