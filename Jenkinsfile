@@ -16,7 +16,8 @@ node('slave02-jnlp') {
 	}
     stage('Ansible Test'){
         if(env.BRANCH_NAME == "Ansible-Deploy"){
-            sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
+            sh "echo Test stage is running."
+	    ##sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
         }
     }
     stage('Ansible Installations'){
