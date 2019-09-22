@@ -3,9 +3,6 @@
   become: yes
   become_method: sudo
   tasks:
-    - name: Test remote connections using PING
-      ping:
-        timeout: 30
     - name: Wait for system to become reachable
       wait_for_connection:
         timeout: 30
