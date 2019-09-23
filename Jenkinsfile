@@ -16,14 +16,12 @@ node() {
 	}
     stage('Ansible Test'){
         if(env.BRANCH_NAME == "Ansible-Deploy"){
-	    sh "whoami"
             sh "echo Test stage is running."
 	    //sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
         }
     }
     stage('Ansible Installations'){
         if(env.BRANCH_NAME == "Ansible-Deploy"){
-	    sh "whoami"
             sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
         }
     }
