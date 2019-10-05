@@ -22,7 +22,6 @@ pipeline {
 					//commit_id = readFile('.git/commit-id').trim()
 					commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
 				}
-				sh "echo $commit_id"
             }
         }
         stage('Paralell Runs'){
