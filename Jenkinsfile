@@ -9,11 +9,11 @@ pipeline {
 	    docker_prod_name = "docker-production-app"
     }
 
-    agent 'slave02-jnlp'
+    agent { label 'slave02-jnlp' }
 
     stages {
         stage('Prepare') {
-            agent 'slave01-ssh'
+            agent { label 'slave01-ssh' }
             steps {
 		        sh "echo Preparation stage is running."
                 checkout scm  
