@@ -17,7 +17,7 @@ pipeline {
             steps {
 		        sh "echo Preparation stage is running."
                 checkout scm  
-				commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
+				//commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
                 sh "echo Preparation stage completed."   
             }
         }
@@ -41,20 +41,22 @@ pipeline {
             }
         }
 		stage('Ansible Test'){
+			when{ 
+				branch "Ansible-Deploy"
+			}
 			steps{
-				if(env.BRANCH_NAME == "Ansible-Deploy"){
-            		sh "echo Test stage is running."
-	    			//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
-        		}
+				sh "echo Test stage is running."
+	    		//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
 			}
 		}
     	stage('Ansible Installations'){
-			steps{
-    	    	if(env.BRANCH_NAME == "Ansible-Deploy"){
-    	    	    sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
-    	    	}
+			when{ 
+				branch "Ansible-Deploy"
 			}
-    	}
+			steps{
+				sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
+			}
+		}
 		stage('Cleanup') {
 			steps{
 				sh "echo Cleanup stage is running."
