@@ -17,8 +17,7 @@ pipeline {
             steps {
 		        sh "echo Preparation stage is running."
                 checkout scm  
-                sh "git rev-parse --short HEAD > .git/commit-id"
-                commit_id = readFile('.git/commit-id').trim()
+				commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
                 sh "echo Preparation stage completed."   
             }
         }
@@ -39,26 +38,6 @@ pipeline {
                         sh "echo Third parallel run completed."   
                     }
                 }
-            }
-        }
-        stage('Build / Publish') {
-            steps{        
-		        if(env.BRANCH_NAME == "Development"){
-		        	sh "echo Build/Publish to Development stage is running."
-		        	def customImage = docker.build(registry + ":$rep_name_dev-$commit_id", "./DockerFiles/Development")
-		        	docker.withRegistry( '', registryCredential ) {
-		        		customImage.push()
-		        	}
-		        	sh "echo Build/Publish to Development stage completed."
-		        }
-		        else if(env.BRANCH_NAME == "Production"){
-		        	sh "echo Build/Publish to Production stage is running."
-		        	def customImage = docker.build(registry + ":$rep_name_prod-$commit_id", "./DockerFiles/Production")
-		        	docker.withRegistry( '', registryCredential ) {
-		        		customImage.push()
-		        	}
-		        	sh "echo Build/Publish to Development stage completed."
-		        }
             }
         }
 		stage('Ansible Test'){
