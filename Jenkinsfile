@@ -15,10 +15,11 @@ pipeline {
         stage('Prepare') {
             agent { label 'slave01-ssh' }
             steps {
-		        sh "echo Preparation stage is running."
+		        sh "echo Preparations are running."
                 checkout scm  
+				sh "git rev-parse --short HEAD > .git/commit-id"
+                //commit_id = readFile('.git/commit-id').trim()
 				//commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
-                sh "echo Preparation stage completed."   
             }
         }
         stage('Paralell Runs'){
@@ -45,7 +46,7 @@ pipeline {
 				branch "Ansible-Deploy"
 			}
 			steps{
-				sh "echo Test stage is running."
+				sh "echo Ansible Tests are running."
 	    		//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
 			}
 		}
@@ -54,7 +55,8 @@ pipeline {
 				branch "Ansible-Deploy"
 			}
 			steps{
-				sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
+				sh "echo Ansible Installations are running."
+				//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
 			}
 		}
 		stage('Cleanup') {
