@@ -17,11 +17,12 @@ pipeline {
             steps {
 		        sh "echo Preparations are running."
                 checkout scm  
-				sh "git rev-parse --short HEAD > .git/commit-id"
+				//sh "git rev-parse --short HEAD > .git/commit-id"
 				script{
-					commit_id = readFile('.git/commit-id').trim()
+					//commit_id = readFile('.git/commit-id').trim()
+					commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
 				}
-				//def commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
+				sh echo commit_id
             }
         }
         stage('Paralell Runs'){
