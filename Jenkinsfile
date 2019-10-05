@@ -18,6 +18,8 @@ pipeline {
 		        sh "echo Preparations are running."
                 checkout scm  
 				sh "git rev-parse --short HEAD > .git/commit-id"
+				echo "GIT_COMMIT is ${env.GIT_COMMIT}"
+				echo commit_id
                 //commit_id = readFile('.git/commit-id').trim()
 				//commit_id = sh(returnStdout: true, script: "git rev-parse --short HEAD > .git/commit-id").trim()
             }
