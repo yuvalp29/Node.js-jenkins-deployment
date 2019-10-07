@@ -53,7 +53,7 @@ pipeline {
 				}
 			}
 		}
-        stage('Paralell Environment Deploy') {
+        stage('Paralell Deployment') {
             parallel {
                 stage('Deploy to Development') {
 					when{ 
