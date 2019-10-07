@@ -39,7 +39,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Build / Publish to Development') {
+		stage('Build / Publish to Production') {
 			when{ 
 				branch "Production"
 			}
@@ -68,7 +68,7 @@ pipeline {
 						branch "Ansible-Deploy"
 					}
                     steps{
-                        sh "echo Deployment to Development is running." 
+                        sh "echo Deployment to Production is running." 
                     }
                 }
             }
