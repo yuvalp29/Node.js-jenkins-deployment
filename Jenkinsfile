@@ -16,7 +16,7 @@ pipeline {
         stage('Prepare') {
             agent { label 'slave01-ssh' }
             steps {
-				sh echo $hostname
+				sh "echo $HOSTNAME"
 		        sh "echo Preparations are running."
                 checkout scm  
 				script{
