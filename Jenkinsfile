@@ -53,7 +53,7 @@ pipeline {
 				}
 			}
 		}
-        stage('Paralell Environment Deploy'){
+        stage('Paralell Environment Deploy') {
             parallel {
                 stage('Deploy to Development') {
 					when{ 
@@ -73,7 +73,7 @@ pipeline {
                 }
             }
         }
-		stage('Ansible Test'){
+		stage('Ansible Test') {
 			when{ 
 				branch "Ansible-Deploy"
 			}
@@ -82,7 +82,7 @@ pipeline {
 	    		//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
 			}
 		}
-    	stage('Ansible Installations'){
+    	stage('Ansible Installations') {
 			when{ 
 				branch "Ansible-Deploy"
 			}
