@@ -16,7 +16,6 @@ pipeline {
         stage('Prepare') {
             agent { label 'slave01-ssh' }
             steps {
-				sh "hostname"
 		        sh "echo Preparations are running."
                 checkout scm  
 				script{
@@ -61,7 +60,6 @@ pipeline {
 						branch "Ansible-Deploy"
 					}
                     steps{
-						sh "hostname"
                         sh "echo Deployment to Development is running."   
                     }
                 }
@@ -80,7 +78,6 @@ pipeline {
 				branch "Ansible-Deploy"
 			}
 			steps{
-				sh "hostname"
 				sh "echo Ansible Tests are running."
 	    		//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
 			}
@@ -96,7 +93,6 @@ pipeline {
 		}
 		stage('Cleanup') {
 			steps{
-				sh "hostname"
 				sh "echo Cleanup stage is running."
 				sh "docker image prune -af"
 				sh "echo cleanup stage completed."
