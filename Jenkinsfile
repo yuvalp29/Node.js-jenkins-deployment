@@ -1,105 +1,68 @@
-pipeline {
-    environment {
-        commit_id          = ""
-		customImage        = ""
-	    registry           = "yp29/jenkinsmultibranch"
-	    registryCredential = "dockerhub"
-	    rep_name_dev 	   = "development"
-	    rep_name_prod 	   = "production"
-	    docker_dev_name    = "docker-development-app"
-	    docker_prod_name   = "docker-production-app"
-    }
-
-    agent { label 'slave01-ssh' }
-
-    stages {
-        stage('Prepare') {
-            //agent { label 'slave01-ssh' }
-            steps {
-		        sh "echo Preparations are running."
-                checkout scm  
-				script{
-					sh "git rev-parse --short HEAD > .git/commit-id"
-					commit_id = readFile('.git/commit-id').trim()
-				}
-            }
-        }
-		stage('Build / Publish to Development') {
-			when{ 
-				anyOf { 
-					branch "Development"; branch "Ansible-Deploy" 
-				}
+node('slave01-ssh') {
+	def commit_id
+	def registry = "yp29/jenkinsmultibranch"
+	def registryCredential = "dockerhub"
+	def rep_name_dev = "development"
+	def rep_name_prod = "production"
+	def docker_dev_name = "docker-development-app"
+	def docker_prod_name = "docker-production-app"
+	
+	stage('Prepare') {
+		sh "echo Preparation stage is running."
+		checkout scm  
+		sh "git rev-parse --short HEAD > .git/commit-id"
+        	commit_id = readFile('.git/commit-id').trim()
+		sh "echo Preparation stage completed."    	
+	}
+	stage('Build / Publish') {
+		if(env.BRANCH_NAME == "Development"){
+			sh "echo Build/Publish to Development stage is running."
+			def customImage = docker.build(registry + ":$rep_name_dev-$commit_id", "./DockerFiles/Development")
+			docker.withRegistry( '', registryCredential ) {
+				customImage.push()
 			}
-			steps{
-				sh "echo Build/Publish to Development is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_dev-$commit_id", "./DockerFiles/Development")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
+			sh "echo Build/Publish to Development stage completed."
 		}
-		stage('Build / Publish to Production') {
-			when{ 
-				anyOf { 
-					branch "Production"; branch "Ansible-Deploy" 
-				}
+		else if(env.BRANCH_NAME == "Production"){
+			sh "echo Build/Publish to Production stage is running."
+			def customImage = docker.build(registry + ":$rep_name_prod-$commit_id", "./DockerFiles/Production")
+			docker.withRegistry( '', registryCredential ) {
+				customImage.push()
 			}
-			steps{
-				sh "echo Build/Publish to Production is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_prod-$commit_id", "./DockerFiles/Production")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
-		}
-        stage('Paralell Deployment') {
-            parallel {
-                stage('Deploy to Development') {
-					when{ 
-						branch "Ansible-Deploy"
-					}
-                    steps{
-                        sh "echo Deployment to Development is running."   
-                    }
-                }
-                stage('Deploy to Production') {
-					when{ 
-						branch "Ansible-Deploy"
-					}
-                    steps{
-                        sh "echo Deployment to Production is running." 
-                    }
-                }
-            }
-        }
-		stage('Ansible Test') {
-			when{ 
-				branch "Ansible-Deploy"
-			}
-			steps{
-				sh "echo Ansible Tests are running."
-	    		//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
-			}
-		}
-    	stage('Ansible Installations') {
-			when{ 
-				branch "Ansible-Deploy"
-			}
-			steps{
-				sh "echo Ansible Installations are running."
-				//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
-			}
-		}
-		stage('Cleanup') {
-			steps{
-				sh "echo Cleanup stage is running."
-				sh "docker image prune -af"
-				sh "echo cleanup stage completed."
-			}
+			sh "echo Build/Publish to Development stage completed."
 		}
 	}
-}   
+	stage('Test') {
+		if(env.BRANCH_NAME == "Development" || env.BRANCH_NAME == "Production"){
+			sh "echo Test stage is running."
+			//input message: "Finished checking the Image localy and remotly? (Click "Proceed" to continue)"
+				//customImage.inside {
+				//	sh 'make test'
+				//}
+			sh "echo Test stage completed."
+		}
+	}
+	stage('Deploy to Development') {
+		if(env.BRANCH_NAME == "Development"){
+			input message: 'Finished before deploying to development? (Click "Proceed" to continue)'
+			sh "echo Deliver for development stage is runing."
+			sh "chmod +x ./Deploy_to_Development.sh"
+			sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
+			sh "echo Application lunched on development. Deploy to Development stage completed."   
+		}
+	}	
+	stage('Deploy to Production') {
+		if(env.BRANCH_NAME == "Production"){ 
+			input message: 'Finished before deploying to production? (Click "Proceed" to continue)'
+			sh "echo Deploy for production stage is runing."
+			sh "chmod +x ./Deploy_to_Production.sh"
+			sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
+			sh "echo Application lunched on production. Deploy to Production stage completed."   
+		}
+	}
+	stage('Cleanup') {
+		sh "echo Cleanup stage is running."
+		sh "docker image prune -af"
+		sh "echo cleanup stage completed."
+	}
+}
