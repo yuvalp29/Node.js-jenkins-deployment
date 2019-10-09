@@ -5,4 +5,3 @@
   tasks:
     - name: Test remote connections using PING
       ping:
-        timeout: 30
