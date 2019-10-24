@@ -81,8 +81,8 @@ pipeline {
 				branch "Ansible-Deploy"
 			}
 			steps{
-				sh "echo Ansible Tests are running."
-	    		sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
+				sh "echo Ansible tests are running."
+	    		sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
 			}
 		}
     	stage('Ansible Installations') {
@@ -90,8 +90,8 @@ pipeline {
 				branch "Ansible-Deploy"
 			}
 			steps{
-				sh "echo Ansible Installations are running."
-				sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
+				sh "echo Ansible installations are running."
+				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Prerequisites.yml"
 			}
 		}
 		stage('Cleanup') {
