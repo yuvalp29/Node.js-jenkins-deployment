@@ -82,7 +82,7 @@ pipeline {
 			}
 			steps{
 				sh "echo Ansible Tests are running."
-	    		//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
+	    		sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/TestConnection.yml"
 			}
 		}
     	stage('Ansible Installations') {
@@ -91,7 +91,7 @@ pipeline {
 			}
 			steps{
 				sh "echo Ansible Installations are running."
-				//sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
+				sh "ansible-playbook -i ./Inventory/hosts.ini ./ymlFiles/Prerequisites.yml"
 			}
 		}
 		stage('Cleanup') {
