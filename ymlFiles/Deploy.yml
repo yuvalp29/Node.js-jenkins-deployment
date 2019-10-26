@@ -6,38 +6,38 @@
   tasks:
     - name: Stop development container
       docker_container:
-        image: yp29/jenkinsmultibranch-development:latest
+        image: yp29/jenkinsmultibranch:development-latest
         name: docker-development-app
         state: absent
 
     - name: Stop production container
       docker_container:
-        image: yp29/jenkinsmultibranch-production:latest
+        image: yp29/jenkinsmultibranch:production-latest
         name: docker-production-app
         state: absent
 
     - name: Remove development image
       docker_image:
-        name: yp29/jenkinsmultibranch-development
-        tag: latest
+        name: yp29/jenkinsmultibranch
+        tag: development-latest
         state: absent
 
     - name: Remove production image
       docker_image:
-        name: yp29/jenkinsmultibranch-production
-        tag: latest
+        name: yp29/jenkinsmultibranch
+        tag: production-latest
         state: absent
 
     - name: Run development container
       docker_container:
-        image: yp29/jenkinsmultibranch-development:latest
+        image: yp29/jenkinsmultibranch:development-latest
         name: docker-development-app
         published_ports: 81:8081
         state: started
 
     - name: Run production container
       docker_container:
-        image: yp29/jenkinsmultibranch-production:latest
+        image: yp29/jenkinsmultibranch:production-latest
         name: docker-production-app
         published_ports: 82:8081
         state: started
