@@ -24,7 +24,7 @@ pipeline {
 		stage('Build / Publish to Development') {
 			when{ 
 				anyOf { 
-					branch "Development"; branch "Ansible-Deploy" 
+					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
@@ -40,7 +40,7 @@ pipeline {
 		stage('Build / Publish to Production') {
 			when{ 
 				anyOf { 
-					branch "Production"; branch "Ansible-Deploy" 
+					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
@@ -57,7 +57,9 @@ pipeline {
             parallel {
                 stage('Development Run') {
 					when{ 
-						branch "Ansible-Deploy"
+						anyOf { 
+							branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+						}
 					}
                     steps{
                         sh "echo Development run in parallel."   
@@ -65,7 +67,9 @@ pipeline {
                 }
                 stage('Production Run') {
 					when{ 
-						branch "Ansible-Deploy"
+						anyOf { 
+							branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+						}
 					}
                     steps{
                         sh "echo Production run in parallel." 
@@ -97,7 +101,18 @@ pipeline {
 			}
 			steps{
 				sh "echo Ansible deployment is running."
-				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Deploy.yml"
+				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
+			}
+		}
+    	stage('K8S Deployment') {
+			when{ 
+				branch "Kubernetes-Deploy"
+			}
+			steps{
+				sh "echo Kubernetes deployment is running."
+				script{
+					sh "./ymlFiles/K8S-Deploy.yml"
+				}
 			}
 		}
 		stage('Cleanup') {
