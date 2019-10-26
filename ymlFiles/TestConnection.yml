@@ -2,6 +2,7 @@
 - hosts: servers
   become: yes
   become_method: sudo
+  become_user: jenkins
   tasks:
     - name: Test remote connections using PING
       ping:
