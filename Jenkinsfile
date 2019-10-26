@@ -13,75 +13,13 @@ pipeline {
     agent { label 'slave01-ssh' }
 
     stages {
-        stage('Prepare') {
-            //agent { label 'slave01-ssh' }
-            steps {
-		        sh "echo Preparations are running."
-                checkout scm  
-				script{
-					sh "git rev-parse --short HEAD > .git/commit-id"
-					commit_id = readFile('.git/commit-id').trim()
-				}
-            }
-        }
-		stage('Build / Publish to Development') {
-			when{ 
-				anyOf { 
-					branch "Development"; branch "Ansible-Deploy" 
-				}
-			}
-			steps{
-				sh "echo Build/Publish to Development is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_dev-$commit_id", "./DockerFiles/Development")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
-		}
-		stage('Build / Publish to Production') {
-			when{ 
-				anyOf { 
-					branch "Production"; branch "Ansible-Deploy" 
-				}
-			}
-			steps{
-				sh "echo Build/Publish to Production is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_prod-$commit_id", "./DockerFiles/Production")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
-		}
-        stage('Paralell Deployment') {
-            parallel {
-                stage('Deploy to Development') {
-					when{ 
-						branch "Ansible-Deploy"
-					}
-                    steps{
-                        sh "echo Deployment to Development is running."   
-                    }
-                }
-                stage('Deploy to Production') {
-					when{ 
-						branch "Ansible-Deploy"
-					}
-                    steps{
-                        sh "echo Deployment to Production is running." 
-                    }
-                }
-            }
-        }
 		stage('Ansible Test') {
 			when{ 
 				branch "Ansible-Deploy"
 			}
 			steps{
 				sh "echo Ansible tests are running."
+				sh "hostname"
 	    		sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
 			}
 		}
