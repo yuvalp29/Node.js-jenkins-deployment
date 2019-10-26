@@ -4,12 +4,6 @@
   become_method: sudo
   become_user: jenkins
   tasks:
-    - name: Install pip
-      apt: name=python-pip state=present
-  
-    - name: Install docker-py
-      pip: name=docker-py
-
     - name: Stop development container
       docker_container:
         image: yp29/jenkinsmultibranch-development:latest
