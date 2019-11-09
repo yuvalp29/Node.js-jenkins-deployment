@@ -30,10 +30,10 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to Development is running."
 				script{
-					customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
+//					customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
+//					docker.withRegistry( '', registryCredential ) {
+//						customImage.push()
+//					}
 					customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
 					docker.withRegistry( '', registryCredential ) {
 						customImage.push()
@@ -50,10 +50,10 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to Production is running."
 				script{
-					customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
+//					customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
+//					docker.withRegistry( '', registryCredential ) {
+//						customImage.push()
+//					}
 					customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
 					docker.withRegistry( '', registryCredential ) {
 						customImage.push()
