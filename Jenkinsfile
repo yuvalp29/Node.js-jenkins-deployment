@@ -113,10 +113,8 @@ pipeline {
 			}
 			steps{
 				sh "echo Kubernetes deployment is running."
-				sh "chmod +x ./scripts/k8s_Deploy_To_Development.sh"
-				sh "chmod +x ./scripts/k8s_Deploy_To_Production.sh"
-				sh "./scripts/k8s_Deploy_To_Development.sh"
-				sh "./scripts/k8s_Deploy_To_Production.sh"
+				sh "chmod +x ./scripts/k8s_Deploy.sh"
+				sh "./scripts/k8s_Deploy.sh"
 			}
 		}
 		stage('Build/Push Dev base image') {
