@@ -12,6 +12,6 @@ spec:
     spec:                        # Spec for the container which will run in the Pod
       containers:
       - name: docker-development-app
-        image: yp29/jenkinsmultibranch:development-latest
+        image: yp29/jenkinsmultibranch:development-base
         ports:
           - containerPort: 8081  # Should match the port number that the node.js application listens on

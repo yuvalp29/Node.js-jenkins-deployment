@@ -21,7 +21,7 @@ pipeline {
 				}
             }
         }
-		stage('Build/Push Dev-latest image') {
+		stage('Build/Push Dev latest image') {
 			when{ 
 				anyOf { 
 					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -37,7 +37,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Build/Push Prod-latest image') {
+		stage('Build/Push Prod latest image') {
 			when{ 
 				anyOf { 
 					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -119,7 +119,7 @@ pipeline {
 				sh "./scripts/k8s_Deploy_To_Production.sh"
 			}
 		}
-		stage('Build/Push Dev-base image') {
+		stage('Build/Push Dev base image') {
 			when{ 
 				anyOf { 
 					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -135,7 +135,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Build/Push Prod-base image') {
+		stage('Build/Push Prod base image') {
 			when{ 
 				anyOf { 
 					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
