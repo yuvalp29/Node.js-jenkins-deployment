@@ -7,7 +7,7 @@ http.createServer(function (request, response) {
    response.writeHead(200, {'Content-Type': 'text/plain'});
    
    // Send the response body as "Hello World"
-   response.end('Welcome to Production!\nThis is the last Kubernetes version!\n');
+   response.end('Welcome to Production!\nThis is the latest Kubernetes version!\n');
 }).listen(8081);
 
 // Console will print the message
