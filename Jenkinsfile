@@ -21,7 +21,7 @@ pipeline {
 				}
             }
         }
-		stage('Build / Publish to Development') {
+		stage('Build / Publish Development Latest image') {
 			when{ 
 				anyOf { 
 					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -30,10 +30,6 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to Development is running."
 				script{
-//					customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
-//					docker.withRegistry( '', registryCredential ) {
-//						customImage.push()
-//					}
 					customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
 					docker.withRegistry( '', registryCredential ) {
 						customImage.push()
@@ -41,7 +37,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Build / Publish to Production') {
+		stage('Build / Publish Production Latest image') {
 			when{ 
 				anyOf { 
 					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -50,10 +46,6 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to Production is running."
 				script{
-//					customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
-//					docker.withRegistry( '', registryCredential ) {
-//						customImage.push()
-//					}
 					customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
 					docker.withRegistry( '', registryCredential ) {
 						customImage.push()
@@ -112,25 +104,55 @@ pipeline {
 				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
 			}
 		}
-    	//stage('K8S Deployment') {
+    	stage('Kubernetes Deployment') {
 			
-			//agent { label 'k8s' }
+			agent { label 'k8s' }
 			
-			//when{ 
-			//	branch "Kubernetes-Deploy"
-			//}
-			//steps{
-		//		sh "echo Kubernetes deployment is running."
-		//		script{
-		//			sh "./ymlFiles/k8s-Deploy.yml"
-		//		}
-		//	}
-		//}
+			when{ 
+				branch "Kubernetes-Deploy"
+			}
+			steps{
+				sh "echo Kubernetes deployment is running."
+					sh "./scripts/k8s_Deploy_To_Development.sh"
+					sh "./scripts/k8s_Deploy_To_Production.sh"
+			}
+		}
+		stage('Build / Publish Development Base image') {
+			when{ 
+				anyOf { 
+					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+				}
+			}
+			steps{
+				sh "echo Build/Publish to Development is running."
+				script{
+					customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
+					docker.withRegistry( '', registryCredential ) {
+						customImage.push()
+					}
+				}
+			}
+		}
+		stage('Build / Publish Production Base image') {
+			when{ 
+				anyOf { 
+					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+				}
+			}
+			steps{
+				sh "echo Build/Publish to Production is running."
+				script{
+					customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
+					docker.withRegistry( '', registryCredential ) {
+						customImage.push()
+					}
+				}
+			}
+		}
 		stage('Cleanup') {
 			steps{
 				sh "echo Cleanup stage is running."
 				sh "docker image prune -af"
-				sh "echo cleanup stage completed."
 			}
 		}
 	}
