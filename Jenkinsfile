@@ -21,7 +21,7 @@ pipeline {
 				}
             }
         }
-		stage('Build / Publish Development Latest image') {
+		stage('Build/Push Dev-latest image') {
 			when{ 
 				anyOf { 
 					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -37,7 +37,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Build / Publish Production Latest image') {
+		stage('Build/Push Prod-latest image') {
 			when{ 
 				anyOf { 
 					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -113,11 +113,13 @@ pipeline {
 			}
 			steps{
 				sh "echo Kubernetes deployment is running."
-					sh "./scripts/k8s_Deploy_To_Development.sh"
-					sh "./scripts/k8s_Deploy_To_Production.sh"
+				sh "chmod +x ./scripts/k8s_Deploy_To_Development.sh"
+				sh "chmod +x ./scripts/k8s_Deploy_To_Production.sh"
+				sh "./scripts/k8s_Deploy_To_Development.sh"
+				sh "./scripts/k8s_Deploy_To_Production.sh"
 			}
 		}
-		stage('Build / Publish Development Base image') {
+		stage('Build/Push Dev-base image') {
 			when{ 
 				anyOf { 
 					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
@@ -133,7 +135,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Build / Publish Production Base image') {
+		stage('Build/Push Prod-base image') {
 			when{ 
 				anyOf { 
 					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
