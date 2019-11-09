@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Pod                 # Type of Kubernetes resource
+metadata:
+  name: development-app-pod           # Name of the Kubernetes resource
+  labels:
+    app: development-latest
+spec:
+    containers:
+      - name: development-app
+        image: yp29/jenkinsmultibranch:development-latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8081  # Should match the port number that the node.js application listens on
