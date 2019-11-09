@@ -104,17 +104,20 @@ pipeline {
 				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
 			}
 		}
-    	stage('K8S Deployment') {
-			when{ 
-				branch "Kubernetes-Deploy"
-			}
-			steps{
-				sh "echo Kubernetes deployment is running."
-				script{
-					sh "./ymlFiles/K8S-Deploy.yml"
-				}
-			}
-		}
+    	//stage('K8S Deployment') {
+			
+			//agent { label 'k8s' }
+			
+			//when{ 
+			//	branch "Kubernetes-Deploy"
+			//}
+			//steps{
+		//		sh "echo Kubernetes deployment is running."
+		//		script{
+		//			sh "./ymlFiles/k8s-Deploy.yml"
+		//		}
+		//	}
+		//}
 		stage('Cleanup') {
 			steps{
 				sh "echo Cleanup stage is running."
