@@ -112,6 +112,7 @@ pipeline {
 				branch "Kubernetes-Deploy"
 			}
 			steps{
+				sh "whoami"
 				sh "echo Kubernetes deployment is running."
 				sh "chmod +x ./scripts/k8s_Deploy_To_Development.sh"
 				sh "chmod +x ./scripts/k8s_Deploy_To_Production.sh"
