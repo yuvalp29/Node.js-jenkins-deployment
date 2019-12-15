@@ -2,6 +2,7 @@
 - hosts: deploy
   become: yes
   become_method: sudo
+  become_user: jenkins
   tasks:
     - name: Install pip
       apt: name=python-pip state=present
