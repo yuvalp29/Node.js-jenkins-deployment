@@ -24,7 +24,7 @@ pipeline {
 		stage('Build/Push Dev latest image') {
 			when{ 
 				anyOf { 
-					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+					branch "Development"; branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
@@ -40,7 +40,7 @@ pipeline {
 		stage('Build/Push Prod latest image') {
 			when{ 
 				anyOf { 
-					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+					branch "Production"; branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
@@ -58,7 +58,7 @@ pipeline {
                 stage('Development Run') {
 					when{ 
 						anyOf { 
-							branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+							branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
 						}
 					}
                     steps{
@@ -68,7 +68,7 @@ pipeline {
                 stage('Production Run') {
 					when{ 
 						anyOf { 
-							branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+							branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
 						}
 					}
                     steps{
@@ -104,6 +104,15 @@ pipeline {
 				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
 			}
 		}
+    	stage('Terraform Deployment') {
+			when{ 
+				branch "Terraform-Deploy"
+			}
+			steps{
+				sh "echo Terraform deployment is running."
+				//sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
+			}
+		}
     	stage('Kubernetes Deployment') {
 			
 			agent { label 'k8s' }
@@ -120,7 +129,7 @@ pipeline {
 		stage('Build/Push Dev base image') {
 			when{ 
 				anyOf { 
-					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+					branch "Development"; branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
@@ -136,7 +145,7 @@ pipeline {
 		stage('Build/Push Prod base image') {
 			when{ 
 				anyOf { 
-					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+					branch "Production"; branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
