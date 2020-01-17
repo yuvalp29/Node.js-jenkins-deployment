@@ -35,11 +35,11 @@ pipeline {
 			}
 		}
 		stage('Build/Push latest image') {
-			when{ 
-				anyOf { 
-					branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-				}
-			}
+			// when{ 
+			// 	anyOf { 
+			// 		branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+			// 	}
+			// }
 			steps{
 				sh "echo Build/Publish to $selectedEnvironment is running."
 				script{
@@ -57,73 +57,6 @@ pipeline {
 							customImage.push()
 						}					
 					}
-				}
-			}
-		}
-		stage('Ansible Test') {
-			when{ 
-				branch "Ansible-Deploy"
-			}
-			steps{
-				sh "echo Ansible tests are running."
-				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
-			}
-		}
-		stage('Ansible Installations') {
-			when{ 
-				branch "Ansible-Deploy"
-			}
-			steps{
-				sh "echo Ansible installations are running."
-				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Prerequisites.yml"
-			}
-		}
-		stage('Ansible Deployment') {
-			when{ 
-				branch "Ansible-Deploy"
-			}
-			steps{
-				sh "echo Ansible deployment is running."
-				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
-			}
-		}
-		stage('Kubernetes Deployment') {
-			
-			agent { label 'k8s' }
-			
-			when{ 
-				branch "Kubernetes-Deploy"
-			}
-			steps{
-				sh "echo Kubernetes deployment is running."
-				sh "chmod +x ./scripts/k8s_Deploy.sh"
-				sh "./scripts/k8s_Deploy.sh"
-			}
-		}
-
-		stage('Build/Push base image') {
-			when{ 
-				anyOf { 
-					branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-				}
-			}
-			steps{
-				sh "echo Build/Publish to $selectedEnvironment is running."
-				script{
-					if ("$usrInput" == rep_name_dev)
-					{
-						customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
-						docker.withRegistry( '', registryCredential ) {
-							customImage.push()
-						}
-					}
-					else
-					{
-						customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
-						docker.withRegistry( '', registryCredential ) {
-							customImage.push()
-						}
-					}					
 				}
 			}
 		}
