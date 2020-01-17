@@ -18,9 +18,9 @@ pipeline {
 				script{
 					sh "git rev-parse --short HEAD > .git/commit-id"
 					commit_id = readFile('.git/commit-id').trim()
-					}
-    	        }
-    	    }
+				}
+			}
+		}
 		stage("Gather Deploy Environment") {
 			when{ 
 				anyOf { 
@@ -36,8 +36,8 @@ pipeline {
     	          env.ENVIRONMENT = INPUT_PARAMS.ENVIRONMENT
     	        }
     	      }
-    	    }
-    	  }
+			}	
+		}
 		stage('Build/Push latest image') {
 			when{ 
 				anyOf { 
@@ -59,7 +59,8 @@ pipeline {
 						customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
 						docker.withRegistry( '', registryCredential ) {
 							customImage.push()
-					}					
+						}					
+					}
 				}
 			}
 		}
@@ -121,10 +122,10 @@ pipeline {
 					}
 					else
 					{
-					customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
+						customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
+						docker.withRegistry( '', registryCredential ) {
+							customImage.push()
+						}
 					}					
 				}
 			}
