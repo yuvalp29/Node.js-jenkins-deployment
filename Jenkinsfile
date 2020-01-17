@@ -19,15 +19,15 @@ pipeline {
             }
         }
       }
+	  stage("Gather Deployment Parameters") {
+		  steps {
+			  timeout(time: 30, unit: 'SECONDS') {
+				  script {
+					  def hello = input id: 'CustomId', message: 'Want to continue?', ok: 'Yes', parameters: [string(defaultValue: 'world', description: '', name: 'hello')]
+            		  echo "Selected Environment: $hello"
+  				  }	
+			  }
+		  }
+	  }
 	}
-	stage("Gather Deployment Parameters") {
-		steps {
-			timeout(time: 30, unit: 'SECONDS') {
-            	script {
-					def hello = input id: 'CustomId', message: 'Want to continue?', ok: 'Yes', parameters: [string(defaultValue: 'world', description: '', name: 'hello')]
-            		echo "Selected Environment: $hello"
-				}	
-			}
-      	}
-    }
 }
