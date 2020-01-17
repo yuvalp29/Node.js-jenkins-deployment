@@ -29,8 +29,7 @@ pipeline {
 					script {
 						def usrInput = input id: 'CustomId', message: 'Please Provide Parameters', ok: 'Next', 
 									   parameters: [string(defaultValue: 'type your value here', description: 'Please select the environment', name: 'ENVIRONMENT')]
-						$selectedEnvironment = usrInput;
-						echo "$selectedEnvironment"
+						echo "$usrInput"
 					}	
 				}
 			}
@@ -44,7 +43,7 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to $selectedEnvironment is running."
 				script{
-					if ($selectedEnvironment == rep_name_dev)
+					if ("$usrInput" == rep_name_dev)
 					{
 						customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
 						docker.withRegistry( '', registryCredential ) {
@@ -111,7 +110,7 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to $selectedEnvironment is running."
 				script{
-					if ($selectedEnvironment == rep_name_dev)
+					if ("$usrInput" == rep_name_dev)
 					{
 						customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
 						docker.withRegistry( '', registryCredential ) {
