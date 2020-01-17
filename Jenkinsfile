@@ -48,15 +48,13 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to ${selectedEnvironment} is running."
 				script{
-					if ("${selectedEnvironment}" == "${rep_name_dev}")
-					{
+					if ("${selectedEnvironment}" == "${rep_name_dev}"){
 						customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
 						docker.withRegistry( '', registryCredential ) {
 							customImage.push()
 						}
 					}
-					else
-					{
+					else{
 						customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
 						docker.withRegistry( '', registryCredential ) {
 							customImage.push()
@@ -65,25 +63,25 @@ pipeline {
 				}
 			}
 		}
-		stage("Deployment to ${selectedEnvironment}") {
+		stage("Application Deployment") {
 			when{ 
 				branch "UserInputDeploy"
 			}
 			steps{
 				input message: "Finished before deploying to ${selectedEnvironment}? (Click 'Proceed' to continue)"
 				sh "echo Deliver for ${selectedEnvironment} stage is runing."
-				if ("${selectedEnvironment}" == "${rep_name_dev}")
-				{
-					sh "chmod +x ./Deploy_to_Development.sh"
-					sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
-					sh "echo Application lunched on development. Deploy to Development stage completed."
-				}
-				else
-				{
-					sh "chmod +x ./Deploy_to_Production.sh"
-					sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
-					sh "echo Application lunched on production. Deploy to Production stage completed."   
-				}					
+				script{
+					if ("${selectedEnvironment}" == "${rep_name_dev}"){
+						sh "chmod +x ./Deploy_to_Development.sh"
+						sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
+						sh "echo Application lunched on development. Deploy to Development stage completed."
+					}
+					else{
+						sh "chmod +x ./Deploy_to_Production.sh"
+						sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
+						sh "echo Application lunched on production. Deploy to Production stage completed."   
+					}	
+				}				
 			}
 		}
 		stage("Build/Push base image") {
@@ -95,15 +93,13 @@ pipeline {
 			steps{
 				sh "echo Build/Publish to ${selectedEnvironment} is running."
 				script{
-					if ("${selectedEnvironment}" == "${rep_name_dev}")
-					{
+					if ("${selectedEnvironment}" == "${rep_name_dev}"){
 						customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
 						docker.withRegistry( '', registryCredential ) {
 							customImage.push()
 						}
 					}
-					else
-					{
+					else{
 						customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
 						docker.withRegistry( '', registryCredential ) {
 							customImage.push()
