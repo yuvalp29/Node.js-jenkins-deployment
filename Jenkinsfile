@@ -7,7 +7,8 @@ pipeline {
 	    registryCredential  = "dockerhub"
 	    rep_name_dev 	    = "development"
 	    rep_name_prod 	    = "production"
-
+		docker_dev_name     = "docker-development-app"
+		docker_prod_name    = "docker-production-app"
     }
 
     agent { label 'slave01-ssh' }
