@@ -49,7 +49,7 @@ pipeline {
 			 	}
 			}
 			steps{
-				sh "echo Build/Publish to $usrInput is running."
+				sh "echo Build/Publish to ${selectedEnvironment} is running."
 				script{
 					if ("${selectedEnvironment}" == "${rep_name_dev}")
 					{
