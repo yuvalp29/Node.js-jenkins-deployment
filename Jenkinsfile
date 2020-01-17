@@ -1,11 +1,13 @@
 pipeline {
     environment {
-        commit_id          = ""
-		customImage        = ""
-	    registry           = "yp29/jenkinsmultibranch"
-	    registryCredential = "dockerhub"
-	    rep_name_dev 	   = "development"
-	    rep_name_prod 	   = "production"
+        commit_id           = ""
+		customImage         = ""
+		selectedEnvironment = ""
+	    registry            = "yp29/jenkinsmultibranch"
+	    registryCredential  = "dockerhub"
+	    rep_name_dev 	    = "development"
+	    rep_name_prod 	    = "production"
+
     }
 
     agent { label 'slave01-ssh' }
@@ -25,9 +27,9 @@ pipeline {
 			steps {
 				timeout(time: 45, unit: 'SECONDS') {
 					script {
-						def selectedEnvironment = input id: 'CustomId', message: 'Please Provide Parameters', ok: 'Next', 
-											      parameters: [string(defaultValue: 'type your value here', description: 'Please select the environment', name: 'ENVIRONMENT')]
-						//echo "Selected Environment: $selectedEnvironment"
+						def usrInput = input id: 'CustomId', message: 'Please Provide Parameters', ok: 'Next', 
+									   parameters: [string(defaultValue: 'type your value here', description: 'Please select the environment', name: 'ENVIRONMENT')]
+						selectedEnvironment = usrInput;
 					}	
 				}
 			}
