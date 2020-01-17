@@ -38,6 +38,15 @@ pipeline {
     	      }
 			}	
 		}
+
+		stage("Use Deploy Parameters") {
+        	steps {
+          		script {
+          		  echo "Selected Environment: ${env.ENVIRONMENT}"
+          		}
+        	}
+      	}
+
 		stage('Build/Push latest image') {
 			when{ 
 				anyOf { 
