@@ -18,75 +18,61 @@ pipeline {
 				script{
 					sh "git rev-parse --short HEAD > .git/commit-id"
 					commit_id = readFile('.git/commit-id').trim()
-				}
-            }
-        }
-		stage('Build/Push Dev latest image') {
+					}
+    	        }
+    	    }
+		stage("Gather Deploy Environment") {
 			when{ 
 				anyOf { 
-					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+					branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+				}
+			}
+    	    steps {
+    	      timeout(time: 30, unit: 'SECONDS') {
+    	        script {
+    	          // Show the select input modal
+    	          def INPUT_PARAMS = input message: 'Please Provide Parameters', ok: 'Next',
+    	          parameters: [choice(name: 'ENVIRONMENT', choices: [rep_name_dev,rep_name_prod].join('\n'), description: 'Please select the Environment')]
+    	          env.ENVIRONMENT = INPUT_PARAMS.ENVIRONMENT
+    	        }
+    	      }
+    	    }
+    	  }
+		stage('Build/Push latest image') {
+			when{ 
+				anyOf { 
+					branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
-				sh "echo Build/Publish to Development is running."
+				sh "echo Build/Publish to ${env.ENVIRONMENT} is running."
 				script{
-					customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
+					if (${env.ENVIRONMENT} == rep_name_dev)
+					{
+						customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
+						docker.withRegistry( '', registryCredential ) {
+							customImage.push()
+						}
 					}
+					else
+					{
+						customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
+						docker.withRegistry( '', registryCredential ) {
+							customImage.push()
+					}					
 				}
 			}
 		}
-		stage('Build/Push Prod latest image') {
-			when{ 
-				anyOf { 
-					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-				}
-			}
-			steps{
-				sh "echo Build/Publish to Production is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
-		}
-        stage('Paralell Job') {
-            parallel {
-                stage('Development Run') {
-					when{ 
-						anyOf { 
-							branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-						}
-					}
-                    steps{
-                        sh "echo Development run in parallel."   
-                    }
-                }
-                stage('Production Run') {
-					when{ 
-						anyOf { 
-							branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-						}
-					}
-                    steps{
-                        sh "echo Production run in parallel." 
-                    }
-                }
-            }
-        }
 		stage('Ansible Test') {
 			when{ 
 				branch "Ansible-Deploy"
 			}
 			steps{
 				sh "echo Ansible tests are running."
-	    		sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
+				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
 			}
 		}
-    	stage('Ansible Installations') {
+		stage('Ansible Installations') {
 			when{ 
 				branch "Ansible-Deploy"
 			}
@@ -95,7 +81,7 @@ pipeline {
 				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Prerequisites.yml"
 			}
 		}
-    	stage('Ansible Deployment') {
+		stage('Ansible Deployment') {
 			when{ 
 				branch "Ansible-Deploy"
 			}
@@ -104,7 +90,7 @@ pipeline {
 				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Ansible-Deploy.yml"
 			}
 		}
-    	stage('Kubernetes Deployment') {
+		stage('Kubernetes Deployment') {
 			
 			agent { label 'k8s' }
 			
@@ -117,35 +103,29 @@ pipeline {
 				sh "./scripts/k8s_Deploy.sh"
 			}
 		}
-		stage('Build/Push Dev base image') {
+		stage('Build/Push base image') {
 			when{ 
 				anyOf { 
-					branch "Development"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+					branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
 				}
 			}
 			steps{
-				sh "echo Build/Publish to Development is running."
+				sh "echo Build/Publish to ${env.ENVIRONMENT} is running."
 				script{
-					customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
+					if (${env.ENVIRONMENT} == rep_name_dev)
+					{
+						customImage = docker.build(registry + ":$rep_name_dev-base", "./DockerFiles/Development")
+						docker.withRegistry( '', registryCredential ) {
+							customImage.push()
+						}
 					}
-				}
-			}
-		}
-		stage('Build/Push Prod base image') {
-			when{ 
-				anyOf { 
-					branch "Production"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-				}
-			}
-			steps{
-				sh "echo Build/Publish to Production is running."
-				script{
+					else
+					{
 					customImage = docker.build(registry + ":$rep_name_prod-base", "./DockerFiles/Production")
 					docker.withRegistry( '', registryCredential ) {
 						customImage.push()
 					}
+					}					
 				}
 			}
 		}
@@ -156,4 +136,4 @@ pipeline {
 			}
 		}
 	}
-}   
+}
