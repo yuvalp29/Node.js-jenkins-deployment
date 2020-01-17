@@ -23,8 +23,9 @@ pipeline {
 		  steps {
 			  timeout(time: 30, unit: 'SECONDS') {
 				  script {
-					  def hello = input id: 'CustomId', message: 'Want to continue?', ok: 'Yes', parameters: [string(defaultValue: 'world', description: '', name: 'hello')]
-            		  echo "Selected Environment: $hello"
+					  def userInput = input id: 'CustomId', message: 'Please Provide Parameters', ok: 'Next', parameters: [string(defaultValue: 'type your value here', description: 'Please select the Environment', name: 'ENVIRONMENT')]
+            		  echo "Selected Environment: $userInput"
+					  echo "Selected Environment: $userInput.ENVIRONMENT"
   				  }	
 			  }
 		  }
