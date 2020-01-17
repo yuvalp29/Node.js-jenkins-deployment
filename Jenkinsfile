@@ -25,13 +25,8 @@ pipeline {
             script {
               // Show the select input modal
               def INPUT_PARAMS = input message: 'Please Provide Parameters', ok: 'Next',
-              parameters: [
-                choice(name: 'ENVIRONMENT', choices: ['Development','Test'].join('\n'), description: 'Please select the Environment'),
-                choice(name: 'PROGRESS', choices: ['Fit','Fat'].join('\n'), description: 'Please select your progress status')]
-                //choice(name: 'IMAGE_TAG', choices: getDockerImages(), description: 'Please select your progress status')]
+              parameters: [choice(name: 'ENVIRONMENT', choices: ['Development','Test'].join('\n'), description: 'Please select the Environment')]
               env.ENVIRONMENT = INPUT_PARAMS.ENVIRONMENT
-              env.PROGRESS = INPUT_PARAMS.PROGRESS
-              //env.IMAGE_TAG = INPUT_PARAMS.IMAGE_TAG
             }
           }
         }
@@ -41,7 +36,6 @@ pipeline {
           script {
             echo "All parameters have been set as Environment Variables"
             echo "Selected Environment: ${env.ENVIRONMENT}"
-            echo "Selected Progress: ${env.PROGRESS}"
           }
         }
       }
