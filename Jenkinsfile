@@ -31,8 +31,8 @@ pipeline {
 						// 			   parameters: [string(defaultValue: 'type your value here', description: 'Please select the environment', name: 'ENVIRONMENT')]
 						// echo "$usrInput"
 
-						def userInput = input(id: 'userInput', 'Please Provide Parameters', ok: 'Next', 
-						                parameters: [[$class: 'ChoiceParameterDefinition', choices: [rep_name_dev, rep_name_prod].join('\n'), description: 'Please select the environment', name:'ENVIRONMENT']])
+						def userInput = input id: 'userInput', message: 'Please Provide Parameters', ok: 'Next', 
+						                parameters: [$class: 'ChoiceParameterDefinition', choices: [rep_name_dev, rep_name_prod].join('\n'), description: 'Please select the environment', name:'ENVIRONMENT']
     					
 						selectedEnvironment = userInput
 						echo "The answer is: ${userInput}"
