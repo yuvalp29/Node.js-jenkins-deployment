@@ -35,13 +35,13 @@ pipeline {
 			}
 		}
 		stage('Build/Push latest image') {
-			// when{ 
-			// 	anyOf { 
-			// 		branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
-			// 	}
-			// }
+			when{ 
+			 	anyOf { 
+			 		branch "UserInputDeploy"; branch "Ansible-Deploy"; branch "Kubernetes-Deploy"
+			 	}
+			}
 			steps{
-				sh "echo Build/Publish to $selectedEnvironment is running."
+				sh "echo Build/Publish to $usrInput is running."
 				script{
 					if ("$usrInput" == rep_name_dev)
 					{
