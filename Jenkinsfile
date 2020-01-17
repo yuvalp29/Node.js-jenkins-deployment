@@ -79,7 +79,7 @@ pipeline {
 					}
 					else{
 						sh "chmod +x ./Deploy_to_Production.sh"
-						sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} latest}"
+						sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} latest"
 						sh "echo Application lunched on production. Deploy to Production stage completed."   
 					}	
 				}				
