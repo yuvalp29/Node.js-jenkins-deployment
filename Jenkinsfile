@@ -74,12 +74,12 @@ pipeline {
 				script{
 					if ("${selectedEnvironment}" == "${rep_name_dev}"){
 						sh "chmod +x ./Deploy_to_Development.sh"
-						sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
+						sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} latest"
 						sh "echo Application lunched on development. Deploy to Development stage completed."
 					}
 					else{
 						sh "chmod +x ./Deploy_to_Production.sh"
-						sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
+						sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} latest}"
 						sh "echo Application lunched on production. Deploy to Production stage completed."   
 					}	
 				}				
