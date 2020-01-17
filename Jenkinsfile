@@ -29,7 +29,8 @@ pipeline {
 					script {
 						def usrInput = input id: 'CustomId', message: 'Please Provide Parameters', ok: 'Next', 
 									   parameters: [string(defaultValue: 'type your value here', description: 'Please select the environment', name: 'ENVIRONMENT')]
-						selectedEnvironment = usrInput;
+						$selectedEnvironment = usrInput;
+						echo "$selectedEnvironment"
 					}	
 				}
 			}
