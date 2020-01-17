@@ -63,28 +63,6 @@ pipeline {
 				}
 			}
 		}
-		// stage("Application Deployment") {
-		// 	when{ 
-		// 		branch "UserInputDeploy"
-		// 	}
-		// 	steps{
-		// 		input message: "Finished before deploying to ${selectedEnvironment}? (Click 'Proceed' to continue)"
-		// 		sh "echo Deliver for ${selectedEnvironment} stage is runing."
-		// 		script{
-		// 			if ("${selectedEnvironment}" == "${rep_name_dev}"){
-		// 				sh "chmod +x ./Deploy_to_Development.sh"
-		// 				sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
-		// 				sh "echo Application lunched on development. Deploy to Development stage completed."
-		// 			}
-		// 			else{
-		// 				sh "chmod +x ./Deploy_to_Production.sh"
-		// 				sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
-		// 				sh "echo Application lunched on production. Deploy to Production stage completed."   
-		// 			}	
-		// 		}				
-		// 	}
-		// }
-
 		stage("Application Deployment") {
 			when{ 
 				branch "UserInputDeploy"
@@ -92,11 +70,19 @@ pipeline {
 			steps{
 				input message: "Finished before deploying to ${selectedEnvironment}? (Click 'Proceed' to continue)"
 				sh "echo Deliver for ${selectedEnvironment} stage is runing."
-				sh "chmod +x ./Deploy_to_Development.sh"
-				sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
-				sh "echo Application lunched on development. Deploy to Development stage completed."
-					
-			}				
+				script{
+					if ("${selectedEnvironment}" == "${rep_name_dev}"){
+						sh "chmod +x ./Deploy_to_Development.sh"
+						sh "./Deploy_to_Development.sh ${docker_dev_name} ${registry} ${rep_name_dev} ${commit_id}"
+						sh "echo Application lunched on development. Deploy to Development stage completed."
+					}
+					else{
+						sh "chmod +x ./Deploy_to_Production.sh"
+						sh "./Deploy_to_Production.sh ${docker_prod_name} ${registry} ${rep_name_prod} ${commit_id}"
+						sh "echo Application lunched on production. Deploy to Production stage completed."   
+					}	
+				}				
+			}
 		}
 		stage("Build/Push base image") {
 			when{ 
