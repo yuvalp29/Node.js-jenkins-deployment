@@ -1,0 +1,27 @@
+- name: Install Azure Cli
+  hosts: myself
+  gather_facts: true
+  become: yes
+  become_method: sudo
+  become_user: jenkins
+  tasks:
+    # Install az cli on Debian/Ubuntu
+    - block: 
+      - name: Run MS install script
+        shell: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install Azure CLi
+      package:
+        name: "azure-cli"
+        state: present
+
+    - name: Verify installed version
+      shell: az --version
+      register: azureVersion
+
+    - name: Login to Azure
+      shell: az login
+
+    - debug:
+        msg: "{{azureVersion.stdout}}"  

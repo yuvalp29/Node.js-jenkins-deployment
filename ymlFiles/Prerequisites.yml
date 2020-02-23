@@ -19,4 +19,4 @@
         - { role: terraform }
     
     - name: Validate Terraform
-      command: echo "terraform version"
+      shell: terraform version
