@@ -13,8 +13,6 @@
       pip: name=docker-py
       
     - name: Install Terraform
-      gather_facts: False
-      become: true
       roles:
         - { role: terraform }
     
