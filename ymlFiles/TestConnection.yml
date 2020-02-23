@@ -1,5 +1,5 @@
 ---
-- hosts: servers
+- hosts: deploy
   become: yes
   become_method: sudo
   become_user: jenkins

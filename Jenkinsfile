@@ -1,11 +1,11 @@
 pipeline {
     environment {
-        commit_id             = ""		
-		DEPLOYMENT_INPUT      = ""
-		TERMINATION_INPUT     = ""
-		AZURE_APP_ID          = "e135aa97-15a7-46da-9d2a-6c18e47bf7eb"
-		AZURE_PASSWORD        = "3cb64ca4-82f8-495e-bf35-c121e8b316e1"
-		AZURE_TENANT          = "093e934e-7489-456c-bb5f-8bb6ea5d829c"
+        commit_id         = ""		
+		DEPLOYMENT_INPUT  = ""
+		TERMINATION_INPUT = ""
+		AZURE_APP_ID      = "e135aa97-15a7-46da-9d2a-6c18e47bf7eb"
+		AZURE_PASSWORD    = "3cb64ca4-82f8-495e-bf35-c121e8b316e1"
+		AZURE_TENANT      = "093e934e-7489-456c-bb5f-8bb6ea5d829c"
     }
 
     agent { label 'slave01-ssh' }
@@ -83,6 +83,9 @@ pipeline {
 		// TODO:
 		// Creating virtual machines according to user's choise + validating the creation
 		stage("VM Creation") {
+
+			agent { label 'k8s' }
+
 			when{ 
 				branch "Terraform-Deploy"
 			}
@@ -139,6 +142,9 @@ pipeline {
 		stage('Configure Jenkins Slaves') {
 			// Configuring the vms as jenkins slaves: connecting the VM to the master using ssh configuration
 			// Pring a message that says that vm are ready and configured for slave 
+			
+			agent { label 'k8s' }
+			
 			when{ 
 				branch "Terraform-Deploy"
 			}
@@ -148,6 +154,9 @@ pipeline {
 		}
 		// Getting from user desicion about terminating Terraform created resources
 		stage("Cleanup Option") {
+
+			agent { label 'k8s' }
+
 			when{ 
 				branch "Terraform-Deploy"
 			}
@@ -165,6 +174,9 @@ pipeline {
 		}
 		// Cleaning the resources 
 		stage("Cleanup") {
+
+			agent { label 'k8s' }			
+
 			when{ 
 				branch "Terraform-Deploy"
 			}
