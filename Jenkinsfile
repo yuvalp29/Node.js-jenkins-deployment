@@ -141,6 +141,12 @@ pipeline {
 		stage('Configure Jenkins Slaves') {
 			// Configuring the vms as jenkins slaves: connecting the VM to the master using ssh configuration
 			// Pring a message that says that vm are ready and configured for slave 
+			when{ 
+				branch "Terraform-Deploy"
+			}
+			steps{		
+				sh "echo Configuring Jenkins slaves."	
+			}
 		}
 		// Getting from user desicion about terminating Terraform created resources
 		stage("Cleanup Option") {
