@@ -6,8 +6,6 @@ pipeline {
 		AZURE_APP_ID          = "e135aa97-15a7-46da-9d2a-6c18e47bf7eb"
 		AZURE_PASSWORD        = "3cb64ca4-82f8-495e-bf35-c121e8b316e1"
 		AZURE_TENANT          = "093e934e-7489-456c-bb5f-8bb6ea5d829c"
-		AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
 
     agent { label 'slave01-ssh' }
