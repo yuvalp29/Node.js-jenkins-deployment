@@ -1,11 +1,22 @@
 ---
-- hosts: deploy
+- hosts: servers
   become: yes
   become_method: sudo
   become_user: jenkins
+  vars:
+    terraform_version: "0.9.6"
   tasks:
-    - name: Install pip
+    - name: Install Python
       apt: name=python-pip state=present
   
-    - name: Install docker-py
+    - name: Install Docker
       pip: name=docker-py
+      
+    - name: Install Terraform
+      gather_facts: False
+      become: true
+      roles:
+        - { role: terraform }
+    
+    - name: Validate Terraform
+      command: echo "terraform version"

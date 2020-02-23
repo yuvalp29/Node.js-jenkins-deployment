@@ -21,80 +21,40 @@ pipeline {
 				}
             }
         }
-		stage('Build/Push Dev latest image') {
+		stage('Test Connection') {
 			when{ 
 				anyOf { 
-					branch "Development"; branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
+					branch "Ansible-Deploy"; branch "Terraform-Deploy"
 				}
-			}
 			steps{
-				sh "echo Build/Publish to Development is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_dev-latest", "./DockerFiles/Development")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
-		}
-		stage('Build/Push Prod latest image') {
-			when{ 
-				anyOf { 
-					branch "Production"; branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
-				}
-			}
-			steps{
-				sh "echo Build/Publish to Production is running."
-				script{
-					customImage = docker.build(registry + ":$rep_name_prod-latest", "./DockerFiles/Production")
-					docker.withRegistry( '', registryCredential ) {
-						customImage.push()
-					}
-				}
-			}
-		}
-        stage('Paralell Job') {
-            parallel {
-                stage('Development Run') {
-					when{ 
-						anyOf { 
-							branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
-						}
-					}
-                    steps{
-                        sh "echo Development run in parallel."   
-                    }
-                }
-                stage('Production Run') {
-					when{ 
-						anyOf { 
-							branch "Ansible-Deploy"; branch "Terraform-Deploy"; branch "Kubernetes-Deploy"
-						}
-					}
-                    steps{
-                        sh "echo Production run in parallel." 
-                    }
-                }
-            }
-        }
-		stage('Ansible Test') {
-			when{ 
-				branch "Ansible-Deploy"
-			}
-			steps{
-				sh "echo Ansible tests are running."
+				sh "echo Testing connection."
 	    		sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
 			}
 		}
-    	stage('Ansible Installations') {
+		stage('Install Prerequisites') {
 			when{ 
-				branch "Ansible-Deploy"
+				branch "Terraform-Deploy"
 			}
 			steps{
-				sh "echo Ansible installations are running."
-				sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/Prerequisites.yml"
+				sh "echo Installing prerequisites."
+	    		sh "ansible-playbook -i ./Inventory/hosts.ini -u jenkins ./ymlFiles/TestConnection.yml"
 			}
 		}
+
+		// parallel terraform deployment of Ubuntu VM and Windows VM + validation
+
+		// User input of what VM to crete + Creation + validation
+
+		// Confoguring the vms as jenkins slaves: connecting the VM to the master using ssh configuration
+
+		// Pring a message that says that vm are ready and configured for slave 
+
+		// Ask if use them or  terminate them
+		 
+		// terraform destroy
+
+
+
     	stage('Ansible Deployment') {
 			when{ 
 				branch "Ansible-Deploy"
