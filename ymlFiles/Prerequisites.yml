@@ -1,5 +1,5 @@
 ---
-- hosts: deploy
+- hosts: deploy_k8s_servers
   become: yes
   become_method: sudo
   become_user: jenkins
@@ -13,6 +13,8 @@
       pip: name=docker-py
       
     - name: Install Terraform
+      gather_facts: False
+      become: true
       roles:
         - { role: terraform }
     
